@@ -1,0 +1,115 @@
+{
+  "id": "tal-ai",
+  "name": "TAL AI",
+  "description": "TAL internal AI service: mlops-claude (Anthropic), tal-mlops (OpenAI-compat), claw (unified proxy)",
+  "version": "2026.5.11",
+  "type": "provider",
+  "setup": {
+    "providers": [
+      { "id": "mlops-claude", "envVars": ["TAL_AI_API_KEY"], "authMethods": ["api-key"] },
+      { "id": "tal-mlops",    "envVars": ["TAL_AI_API_KEY"], "authMethods": ["api-key"] },
+      { "id": "claw",         "envVars": ["CLAW_API_KEY"],   "authMethods": ["api-key"] }
+    ]
+  },
+  "providerAuthChoices": [
+    {
+      "provider": "mlops-claude",
+      "method": "api-key",
+      "choiceId": "mlops-claude-api-key",
+      "choiceLabel": "TAL MLOps Claude (Anthropic模型专属，模型广场 APPID:APPKEY)",
+      "groupId": "tal-ai",
+      "groupLabel": "TAL AI",
+      "optionKey": "talAiApiKey",
+      "cliFlag": "--tal-ai-api-key",
+      "cliOption": "--tal-ai-api-key <key>",
+      "cliDescription": "模型广场凭证（格式：APPID:APPKEY）"
+    },
+    {
+      "provider": "tal-mlops",
+      "method": "api-key",
+      "choiceId": "tal-mlops-api-key",
+      "choiceLabel": "TAL MLOps (模型广场 APPID:APPKEY)",
+      "groupId": "tal-ai",
+      "groupLabel": "TAL AI",
+      "optionKey": "talAiApiKey",
+      "cliFlag": "--tal-ai-api-key",
+      "cliOption": "--tal-ai-api-key <key>",
+      "cliDescription": "模型广场凭证（格式：APPID:APPKEY）"
+    },
+    {
+      "provider": "claw",
+      "method": "api-key",
+      "choiceId": "claw-api-key",
+      "choiceLabel": "TAL Claw (模型广场tokenplan，例如：sk-xxxx)",
+      "groupId": "tal-ai",
+      "groupLabel": "TAL AI",
+      "optionKey": "clawApiKey",
+      "cliFlag": "--claw-api-key",
+      "cliOption": "--claw-api-key <key>",
+      "cliDescription": "模型广场 tokenplan 密钥（格式：sk-xxxx）"
+    }
+  ],
+  "providerAuthAliases": {
+    "tal-mlops": "mlops-claude"
+  },
+  "modelCatalog": {
+    "providers": {
+      "mlops-claude": {
+        "baseUrl": "http://ai-service.tal.com",
+        "api": "anthropic-messages",
+        "models": [
+          { "id": "claude-opus-4.6",   "name": "Claude Opus 4.6",   "reasoning": true,  "input": ["text", "image"], "contextWindow": 400000, "maxTokens": 128000 },
+          { "id": "claude-sonnet-4.6", "name": "Claude Sonnet 4.6", "reasoning": false, "input": ["text", "image"], "contextWindow": 400000, "maxTokens": 128000 }
+        ]
+      },
+      "tal-mlops": {
+        "baseUrl": "http://ai-service.tal.com/openai-compatible/v1",
+        "api": "openai-completions",
+        "models": [
+          { "id": "MiniMax-M2.7", "name": "MiniMax M2.7", "reasoning": false, "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 8192 },
+          { "id": "glm-5.1",     "name": "GLM-5.1",      "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 65536 }
+        ]
+      },
+      "claw": {
+        "baseUrl": "http://ai-service.tal.com/claw/v1",
+        "api": "openai-completions",
+        "headers": { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
+        "models": [
+          { "id": "claude-haiku-4.5",  "name": "Claude Haiku 4.5",  "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 64000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "claude-sonnet-4.5", "name": "Claude Sonnet 4.5", "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 64000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "claude-opus-4.5",   "name": "Claude Opus 4.5",   "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 64000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "claude-sonnet-4.6", "name": "Claude Sonnet 4.6", "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 100000, "maxTokens": 64000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "claude-opus-4.6",   "name": "Claude Opus 4.6",   "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 131072, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "glm-4.7",     "name": "GLM-4.7",     "api": "anthropic-messages", "reasoning": true, "input": ["text"], "contextWindow": 200000, "maxTokens": 131072, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "glm-5",       "name": "GLM-5",       "api": "anthropic-messages", "reasoning": true, "input": ["text"], "contextWindow": 200000, "maxTokens": 128000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "glm-5-turbo", "name": "GLM-5-Turbo", "api": "anthropic-messages", "reasoning": true, "input": ["text"], "contextWindow": 200000, "maxTokens": 131072, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "gpt-5.3-codex",        "name": "gpt-5.3-codex",        "reasoning": true, "input": ["text", "image"], "contextWindow": 400000,  "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "gpt-5.2-codex",        "name": "gpt-5.2-codex",        "reasoning": true, "input": ["text", "image"], "contextWindow": 400000,  "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "kimi-k2.5",            "name": "kimi-k2.5",            "reasoning": true, "input": ["text", "image"], "contextWindow": 256000,  "maxTokens": 32768,  "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "gemini-3-flash",       "name": "Gemini 3 Flash",       "reasoning": true, "input": ["text", "image"], "contextWindow": 400000,  "maxTokens": 65536,  "compat": { "requiresToolResultName": true }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "doubao-seed-2.0-pro",  "name": "doubao-seed-2.0-pro",  "reasoning": true, "input": ["text", "image"], "contextWindow": 256000,  "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "qwen3.5-plus",         "name": "qwen3.5-plus",         "reasoning": true, "input": ["text", "image"], "contextWindow": 1000000, "maxTokens": 65536,  "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "gpt-5.4",              "name": "gpt-5.4",              "reasoning": true, "input": ["text", "image"], "contextWindow": 1050000, "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+          { "id": "doubao-seed-2.0-lite", "name": "doubao-seed-2.0-lite", "reasoning": true, "input": ["text", "image"], "contextWindow": 256000,  "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } }
+        ]
+      }
+    }
+  },
+  "modelSupport": {
+    "mlops-claude": ["claude-opus-4.6", "claude-sonnet-4.6"],
+    "tal-mlops": ["MiniMax-M2.7", "glm-5.1"],
+    "claw": [
+      "claude-haiku-4.5", "claude-sonnet-4.5", "claude-opus-4.5",
+      "claude-sonnet-4.6", "claude-opus-4.6",
+      "glm-4.7", "glm-5", "glm-5-turbo",
+      "gpt-5.3-codex", "gpt-5.2-codex", "kimi-k2.5",
+      "gemini-3-flash", "doubao-seed-2.0-pro", "doubao-seed-2.0-lite",
+      "qwen3.5-plus", "gpt-5.4"
+    ]
+  },
+  "configSchema": {},
+  "compat": {
+    "pluginApi": ">=2026.3.24-beta.2",
+    "minGatewayVersion": "2026.3.24-beta.2"
+  }
+}

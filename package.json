@@ -1,0 +1,32 @@
+{
+  "name": "@tal/openclaw-tal-ai",
+  "version": "2026.5.11",
+  "type": "module",
+  "description": "TAL internal AI service provider plugin for OpenClaw",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.3.24-beta.2"
+  },
+  "openclaw": {
+    "extensions": ["./index.js"],
+    "providers": ["mlops-claude", "tal-mlops", "claw"],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "build": {
+      "openclawVersion": "2026.5.4",
+      "pluginSdkVersion": "2026.5.4"
+    }
+  }
+}
