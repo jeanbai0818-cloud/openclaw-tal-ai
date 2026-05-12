@@ -1,6 +1,6 @@
 {
   "name": "@jeanbai0818-cloud/openclaw-tal-ai",
-  "version": "2026.5.12",
+  "version": "2026.5.13",
   "type": "module",
   "description": "TAL internal AI service provider plugin for OpenClaw",
   "main": "./dist/index.js",

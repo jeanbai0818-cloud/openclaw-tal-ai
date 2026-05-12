@@ -22,8 +22,14 @@ openclaw gateway restart
 
 | 模型 | 说明 |
 |------|------|
-| claude-opus-4.6 | Claude Opus 4.6，支持推理模式 |
+| claude-haiku-4.5 | Claude Haiku 4.5，支持推理模式 |
+| claude-sonnet-4.5 | Claude Sonnet 4.5，支持推理模式 |
+| claude-opus-4.5 | Claude Opus 4.5，支持推理模式 |
 | claude-sonnet-4.6 | Claude Sonnet 4.6 |
+| claude-opus-4.6 | Claude Opus 4.6，支持推理模式 |
+| glm-4.7 | GLM-4.7，支持推理模式 |
+| glm-5 | GLM-5，支持推理模式 |
+| glm-5-turbo | GLM-5-Turbo，支持推理模式 |
 
 凭证：模型广场 **APPID:APPKEY** 格式
 
@@ -31,12 +37,20 @@ openclaw gateway restart
 
 ### tal-mlops — TAL MLOps（OpenAI 兼容通道）
 
-OpenAI 兼容接口，接入国产模型。
+OpenAI 兼容接口，接入国产及主流模型。
 
 | 模型 | 说明 |
 |------|------|
 | MiniMax-M2.7 | MiniMax M2.7 |
 | glm-5.1 | GLM-5.1，支持推理模式 |
+| gpt-5.2-codex | GPT-5.2 Codex，支持推理模式 |
+| gpt-5.3-codex | GPT-5.3 Codex，支持推理模式 |
+| gpt-5.4 | GPT-5.4，支持推理模式 |
+| kimi-k2.5 | Kimi K2.5，支持推理模式 |
+| gemini-3-flash | Gemini 3 Flash，支持推理模式 |
+| doubao-seed-2.0-lite | 豆包 Seed 2.0 Lite，支持推理模式 |
+| doubao-seed-2.0-pro | 豆包 Seed 2.0 Pro，支持推理模式 |
+| qwen3.5-plus | Qwen 3.5 Plus，支持推理模式 |
 
 凭证：模型广场 **APPID:APPKEY** 格式（与 mlops-claude 共用同一个 key）
 
