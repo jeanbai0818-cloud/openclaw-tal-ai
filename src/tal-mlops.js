@@ -10,6 +10,12 @@ const talMlopsBaseAuth = createProviderApiKeyAuthMethod({
   envVar: "TAL_AI_API_KEY",
   promptMessage: "输入 TAL 模型广场凭证（格式：APPID:APPKEY）",
   defaultModel: "tal-mlops/glm-5.1",
+  wizard: {
+    choiceId: "tal-mlops-api-key",
+    choiceLabel: "TAL MLOps (模型广场 APPID:APPKEY)",
+    groupId: "tal-ai",
+    groupLabel: "TAL AI",
+  },
 });
 
 export const talMlopsProvider = {
@@ -18,28 +24,7 @@ export const talMlopsProvider = {
   docsPath: "/providers/tal-mlops",
   envVars: ["TAL_AI_API_KEY"],
 
-  auth: [
-    {
-      ...talMlopsBaseAuth,
-      run: async (ctx) => {
-        const existingKey = ctx.config?.plugins?.entries?.["tal-ai"]?.config?.talAiApiKey;
-        if (existingKey) {
-          const masked = existingKey.length > 8 ? existingKey.slice(0, 8) + "..." : existingKey;
-          const keep = await ctx.prompter.confirm({
-            message: `保留现有密钥 (${masked})？`,
-            initialValue: true,
-          });
-          if (keep) {
-            return talMlopsBaseAuth.run({
-              ...ctx,
-              prompter: { ...ctx.prompter, text: async () => existingKey },
-            });
-          }
-        }
-        return talMlopsBaseAuth.run(ctx);
-      },
-    },
-  ],
+  auth: [talMlopsBaseAuth],
 
   catalog: {
     order: "simple",

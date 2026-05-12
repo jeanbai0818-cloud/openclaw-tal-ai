@@ -20,6 +20,12 @@ export const mlopsClaudeProvider = {
       envVar: "TAL_AI_API_KEY",
       promptMessage: "Enter your TAL AI API key",
       defaultModel: "mlops-claude/claude-sonnet-4.6",
+      wizard: {
+        choiceId: "mlops-claude-api-key",
+        choiceLabel: "TAL MLOps Claude (Anthropic模型专属，模型广场 APPID:APPKEY)",
+        groupId: "tal-ai",
+        groupLabel: "TAL AI",
+      },
     }),
   ],
 
