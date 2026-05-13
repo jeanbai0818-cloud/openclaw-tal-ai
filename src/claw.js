@@ -10,6 +10,12 @@ const clawBaseAuth = createProviderApiKeyAuthMethod({
   envVar: "CLAW_API_KEY",
   promptMessage: "输入 TAL 模型广场 tokenplan 密钥（格式：sk-xxxx）",
   defaultModel: "claw/claude-sonnet-4.6",
+  wizard: {
+    choiceId: "claw-api-key",
+    choiceLabel: "TAL Claw (模型广场tokenplan，例如：sk-xxxx)",
+    groupId: "tal-ai",
+    groupLabel: "TAL AI",
+  },
 });
 
 export const clawProvider = {
@@ -18,28 +24,7 @@ export const clawProvider = {
   docsPath: "/providers/claw",
   envVars: ["CLAW_API_KEY"],
 
-  auth: [
-    {
-      ...clawBaseAuth,
-      run: async (ctx) => {
-        const existingKey = ctx.config?.plugins?.entries?.["tal-ai"]?.config?.clawApiKey;
-        if (existingKey) {
-          const masked = existingKey.length > 8 ? existingKey.slice(0, 8) + "..." : existingKey;
-          const keep = await ctx.prompter.confirm({
-            message: `保留现有密钥 (${masked})？`,
-            initialValue: true,
-          });
-          if (keep) {
-            return clawBaseAuth.run({
-              ...ctx,
-              prompter: { ...ctx.prompter, text: async () => existingKey },
-            });
-          }
-        }
-        return clawBaseAuth.run(ctx);
-      },
-    },
-  ],
+  auth: [clawBaseAuth],
 
   catalog: {
     order: "simple",
