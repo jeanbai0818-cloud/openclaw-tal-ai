@@ -33,7 +33,7 @@ export const clawProvider = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "http://ai-service.tal.com/claw/v1",
+          baseUrl: "https://ai-service.tal.com/claw/v1",
           apiKey,
           api: "openai-completions",
           headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },

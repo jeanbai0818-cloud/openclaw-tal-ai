@@ -1,7 +1,7 @@
 import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth";
 
 // tal-mlops: TAL internal OpenAI-compatible endpoint
-// baseUrl: http://ai-service.tal.com/openai-compatible/v1, api: openai-completions
+// baseUrl: https://ai-service.tal.com/openai-compatible/v1, api: openai-completions
 // Shares TAL_AI_API_KEY with mlops-claude (same key, different path and protocol)
 export const talMlopsProvider = {
   id: "tal-mlops",
@@ -36,7 +36,7 @@ export const talMlopsProvider = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "http://ai-service.tal.com/openai-compatible/v1",
+          baseUrl: "https://ai-service.tal.com/openai-compatible/v1",
           apiKey,
           api: "openai-completions",
           models: [

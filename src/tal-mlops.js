@@ -33,7 +33,7 @@ export const talMlopsProvider = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "http://ai-service.tal.com/openai-compatible/v1",
+          baseUrl: "https://ai-service.tal.com/openai-compatible/v1",
           apiKey,
           api: "openai-completions",
           models: [

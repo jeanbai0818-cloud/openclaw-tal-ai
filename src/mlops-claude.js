@@ -33,7 +33,7 @@ export const mlopsClaudeProvider = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "http://ai-service.tal.com",
+          baseUrl: "https://ai-service.tal.com",
           apiKey,
           api: "anthropic-messages",
           models: [

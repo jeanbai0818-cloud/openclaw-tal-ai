@@ -10,7 +10,7 @@ describe("mlops-claude", () => {
   it("returns anthropic-messages provider when key is present", async () => {
     const result = await mlopsClaudeProvider.catalog.run(withKey);
     expect(result?.provider?.api).toBe("anthropic-messages");
-    expect(result?.provider?.baseUrl).toBe("http://ai-service.tal.com");
+    expect(result?.provider?.baseUrl).toBe("https://ai-service.tal.com");
   });
 
   it("includes expected Claude models", async () => {
@@ -29,7 +29,7 @@ describe("tal-mlops", () => {
   it("returns openai-completions provider when key is present", async () => {
     const result = await talMlopsProvider.catalog.run(withKey);
     expect(result?.provider?.api).toBe("openai-completions");
-    expect(result?.provider?.baseUrl).toBe("http://ai-service.tal.com/openai-compatible/v1");
+    expect(result?.provider?.baseUrl).toBe("https://ai-service.tal.com/openai-compatible/v1");
   });
 
   it("includes MiniMax and GLM models", async () => {
@@ -48,7 +48,7 @@ describe("claw", () => {
   it("uses openai-completions as provider-level api", async () => {
     const result = await clawProvider.catalog.run(withKey);
     expect(result?.provider?.api).toBe("openai-completions");
-    expect(result?.provider?.baseUrl).toBe("http://ai-service.tal.com/claw/v1");
+    expect(result?.provider?.baseUrl).toBe("https://ai-service.tal.com/claw/v1");
   });
 
   it("includes X-Agent-Channel custom header", async () => {
