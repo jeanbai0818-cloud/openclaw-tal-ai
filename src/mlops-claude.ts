@@ -1,7 +1,7 @@
 import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth";
 
 // mlops-claude: TAL internal Anthropic-protocol endpoint
-// baseUrl: http://ai-service.tal.com, api: anthropic-messages
+// baseUrl: https://ai-service.tal.com, api: anthropic-messages
 // Shares TAL_AI_API_KEY with tal-mlops and claw (same key, different routing)
 export const mlopsClaudeProvider = {
   id: "mlops-claude",
@@ -30,7 +30,7 @@ export const mlopsClaudeProvider = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "http://ai-service.tal.com",
+          baseUrl: "https://ai-service.tal.com",
           apiKey,
           api: "anthropic-messages",
           models: [
