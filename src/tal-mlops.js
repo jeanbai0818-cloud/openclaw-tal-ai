@@ -32,7 +32,8 @@ export const talMlopsProvider = {
       const { apiKey } = ctx.resolveProviderApiKey("tal-mlops");
       if (!apiKey) return null;
       return {
-        provider: {
+        providers: {
+          "tal-mlops": {
           baseUrl: "https://ai-service.tal.com/openai-compatible/v1",
           apiKey,
           api: "openai-completions",
@@ -175,6 +176,7 @@ export const talMlopsProvider = {
               },
             },
           ],
+          },
         },
       };
     },

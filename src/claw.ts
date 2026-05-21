@@ -8,19 +8,25 @@ export const clawProvider = {
   id: "claw",
   label: "TAL Claw",
   docsPath: "/providers/claw",
-  envVars: ["TAL_AI_API_KEY"],
+  envVars: ["CLAW_API_KEY"],
 
   auth: [
     createProviderApiKeyAuthMethod({
       providerId: "claw",
       methodId: "api-key",
-      label: "TAL AI API key",
-      hint: "Internal TAL AI service key (format: uid:token)",
-      optionKey: "talAiApiKey",
-      flagName: "--tal-ai-api-key",
-      envVar: "TAL_AI_API_KEY",
-      promptMessage: "Enter your TAL AI API key",
+      label: "TAL Claw API key",
+      hint: "模型广场 tokenplan 密钥（格式：sk-xxxx）",
+      optionKey: "clawApiKey",
+      flagName: "--claw-api-key",
+      envVar: "CLAW_API_KEY",
+      promptMessage: "输入 TAL 模型广场 tokenplan 密钥（格式：sk-xxxx）",
       defaultModel: "claw/claude-sonnet-4.6",
+      wizard: {
+        choiceId: "claw-api-key",
+        choiceLabel: "TAL Claw (模型广场tokenplan，例如：sk-xxxx)",
+        groupId: "tal-ai",
+        groupLabel: "TAL AI",
+      },
     }),
   ],
 
@@ -30,7 +36,8 @@ export const clawProvider = {
       const { apiKey } = ctx.resolveProviderApiKey("claw");
       if (!apiKey) return null;
       return {
-        provider: {
+        providers: {
+          "claw": {
           baseUrl: "https://ai-service.tal.com/claw/v1",
           apiKey,
           api: "openai-completions",
@@ -248,6 +255,7 @@ export const clawProvider = {
               cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             },
           ],
+          },
         },
       };
     },

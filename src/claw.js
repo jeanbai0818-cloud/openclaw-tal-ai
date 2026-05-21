@@ -32,7 +32,8 @@ export const clawProvider = {
       const { apiKey } = ctx.resolveProviderApiKey("claw");
       if (!apiKey) return null;
       return {
-        provider: {
+        providers: {
+          "claw": {
           baseUrl: "https://ai-service.tal.com/claw/v1",
           apiKey,
           api: "openai-completions",
@@ -55,6 +56,7 @@ export const clawProvider = {
             { id: "gpt-5.4",              name: "gpt-5.4",              reasoning: true, input: ["text", "image"], contextWindow: 1050000, maxTokens: 128000, compat: { supportsStore: false, supportsDeveloperRole: false, supportsReasoningEffort: true, supportsUsageInStreaming: true, maxTokensField: "max_tokens", requiresAssistantAfterToolResult: false }, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } },
             { id: "doubao-seed-2.0-lite", name: "doubao-seed-2.0-lite", reasoning: true, input: ["text", "image"], contextWindow: 256000,  maxTokens: 128000, compat: { supportsStore: false, supportsDeveloperRole: false, supportsReasoningEffort: true, supportsUsageInStreaming: true, maxTokensField: "max_tokens", requiresAssistantAfterToolResult: false }, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } },
           ],
+          },
         },
       };
     },

@@ -2,7 +2,7 @@
   "id": "tal-ai",
   "name": "TAL AI",
   "description": "TAL internal AI service: mlops-claude (Anthropic), tal-mlops (OpenAI-compat), claw (unified proxy)",
-  "version": "2026.5.15",
+  "version": "2026.5.16",
   "type": "provider",
   "setup": {
     "providers": [

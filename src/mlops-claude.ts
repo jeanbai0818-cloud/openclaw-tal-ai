@@ -35,7 +35,8 @@ export const mlopsClaudeProvider = {
       const { apiKey } = ctx.resolveProviderApiKey("mlops-claude");
       if (!apiKey) return null;
       return {
-        provider: {
+        providers: {
+          "mlops-claude": {
           baseUrl: "https://ai-service.tal.com",
           apiKey,
           api: "anthropic-messages",
@@ -105,6 +106,7 @@ export const mlopsClaudeProvider = {
               maxTokens: 131072,
             },
           ],
+          },
         },
       };
     },
