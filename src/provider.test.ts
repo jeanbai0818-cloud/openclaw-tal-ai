@@ -24,12 +24,11 @@ describe("mlops-claude", () => {
     expect(await mlopsClaudeProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("buildStaticProvider returns models without auth", () => {
-    const result = mlopsClaudeProvider.catalog.buildStaticProvider();
-    expect(result?.api).toBe("anthropic-messages");
-    expect(result?.baseUrl).toBe("https://ai-service.tal.com");
-    expect(result?.models?.length).toBeGreaterThan(0);
-    const ids = result?.models?.map((m: any) => m.id);
+  it("staticRun returns models without auth", async () => {
+    const result = await mlopsClaudeProvider.catalog.staticRun({} as any);
+    expect(result?.providers?.["mlops-claude"]?.api).toBe("anthropic-messages");
+    expect(result?.providers?.["mlops-claude"]?.baseUrl).toBe("https://ai-service.tal.com");
+    const ids = result?.providers?.["mlops-claude"]?.models?.map((m: any) => m.id);
     expect(ids).toContain("claude-sonnet-4.6");
     expect(ids).toContain("claude-opus-4.6");
   });
@@ -53,12 +52,11 @@ describe("tal-mlops", () => {
     expect(await talMlopsProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("buildStaticProvider returns models without auth", () => {
-    const result = talMlopsProvider.catalog.buildStaticProvider();
-    expect(result?.api).toBe("openai-completions");
-    expect(result?.baseUrl).toBe("https://ai-service.tal.com/openai-compatible/v1");
-    expect(result?.models?.length).toBeGreaterThan(0);
-    const ids = result?.models?.map((m: any) => m.id);
+  it("staticRun returns models without auth", async () => {
+    const result = await talMlopsProvider.catalog.staticRun({} as any);
+    expect(result?.providers?.["tal-mlops"]?.api).toBe("openai-completions");
+    expect(result?.providers?.["tal-mlops"]?.baseUrl).toBe("https://ai-service.tal.com/openai-compatible/v1");
+    const ids = result?.providers?.["tal-mlops"]?.models?.map((m: any) => m.id);
     expect(ids).toContain("MiniMax-M2.7");
     expect(ids).toContain("glm-5.1");
   });
@@ -115,13 +113,13 @@ describe("claw", () => {
     expect(await clawProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("buildStaticProvider returns models without auth", () => {
-    const result = clawProvider.catalog.buildStaticProvider();
-    expect(result?.api).toBe("openai-completions");
-    expect(result?.baseUrl).toBe("https://ai-service.tal.com/claw/v1");
-    expect(result?.headers?.["X-Agent-Channel"]).toBe("jcfwzt-sre-openclaw");
-    expect(result?.models).toHaveLength(16);
-    const ids = result?.models?.map((m: any) => m.id);
+  it("staticRun returns models without auth", async () => {
+    const result = await clawProvider.catalog.staticRun({} as any);
+    expect(result?.providers?.["claw"]?.api).toBe("openai-completions");
+    expect(result?.providers?.["claw"]?.baseUrl).toBe("https://ai-service.tal.com/claw/v1");
+    expect(result?.providers?.["claw"]?.headers?.["X-Agent-Channel"]).toBe("jcfwzt-sre-openclaw");
+    expect(result?.providers?.["claw"]?.models).toHaveLength(16);
+    const ids = result?.providers?.["claw"]?.models?.map((m: any) => m.id);
     expect(ids).toContain("claude-sonnet-4.6");
     expect(ids).toContain("gemini-3-flash");
   });

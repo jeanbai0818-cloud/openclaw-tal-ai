@@ -95,10 +95,14 @@ export const mlopsClaudeProvider = {
 
   catalog: {
     order: "simple",
-    buildStaticProvider: () => ({
-      baseUrl: "https://ai-service.tal.com",
-      api: "anthropic-messages",
-      models: MLOPS_CLAUDE_MODELS,
+    staticRun: async (_ctx) => ({
+      providers: {
+        "mlops-claude": {
+          baseUrl: "https://ai-service.tal.com",
+          api: "anthropic-messages",
+          models: MLOPS_CLAUDE_MODELS,
+        },
+      },
     }),
     run: async (ctx) => {
       const { apiKey } = ctx.resolveProviderApiKey("mlops-claude");

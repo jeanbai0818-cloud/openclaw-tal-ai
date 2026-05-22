@@ -49,11 +49,15 @@ export const clawProvider = {
 
   catalog: {
     order: "simple",
-    buildStaticProvider: () => ({
-      baseUrl: "https://ai-service.tal.com/claw/v1",
-      api: "openai-completions",
-      headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
-      models: CLAW_MODELS,
+    staticRun: async (_ctx) => ({
+      providers: {
+        "claw": {
+          baseUrl: "https://ai-service.tal.com/claw/v1",
+          api: "openai-completions",
+          headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
+          models: CLAW_MODELS,
+        },
+      },
     }),
     run: async (ctx) => {
       const { apiKey } = ctx.resolveProviderApiKey("claw");
