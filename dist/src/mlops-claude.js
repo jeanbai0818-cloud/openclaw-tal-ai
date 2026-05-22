@@ -1,0 +1,127 @@
+import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth";
+// mlops-claude: TAL internal Anthropic-protocol endpoint
+// baseUrl: https://ai-service.tal.com, api: anthropic-messages
+// Shares TAL_AI_API_KEY with tal-mlops and claw (same key, different routing)
+const MLOPS_CLAUDE_MODELS = [
+    {
+        id: "claude-haiku-4.5",
+        name: "Claude Haiku 4.5",
+        reasoning: true,
+        input: ["text", "image"],
+        contextWindow: 200000,
+        maxTokens: 64000,
+    },
+    {
+        id: "claude-sonnet-4.5",
+        name: "Claude Sonnet 4.5",
+        reasoning: true,
+        input: ["text", "image"],
+        contextWindow: 200000,
+        maxTokens: 64000,
+    },
+    {
+        id: "claude-opus-4.5",
+        name: "Claude Opus 4.5",
+        reasoning: true,
+        input: ["text", "image"],
+        contextWindow: 200000,
+        maxTokens: 64000,
+    },
+    {
+        id: "claude-sonnet-4.6",
+        name: "Claude Sonnet 4.6",
+        reasoning: false,
+        input: ["text", "image"],
+        contextWindow: 400000,
+        maxTokens: 128000,
+    },
+    {
+        id: "claude-opus-4.6",
+        name: "Claude Opus 4.6",
+        reasoning: true,
+        input: ["text", "image"],
+        contextWindow: 400000,
+        maxTokens: 128000,
+    },
+    {
+        id: "glm-4.7",
+        name: "GLM-4.7",
+        reasoning: true,
+        input: ["text"],
+        contextWindow: 200000,
+        maxTokens: 131072,
+    },
+    {
+        id: "glm-5",
+        name: "GLM-5",
+        reasoning: true,
+        input: ["text"],
+        contextWindow: 200000,
+        maxTokens: 128000,
+    },
+    {
+        id: "glm-5-turbo",
+        name: "GLM-5-Turbo",
+        reasoning: true,
+        input: ["text"],
+        contextWindow: 200000,
+        maxTokens: 131072,
+    },
+];
+export const mlopsClaudeProvider = {
+    id: "mlops-claude",
+    label: "TAL MLOps Claude",
+    docsPath: "/providers/mlops-claude",
+    envVars: ["TAL_AI_API_KEY"],
+    auth: [
+        createProviderApiKeyAuthMethod({
+            providerId: "mlops-claude",
+            methodId: "api-key",
+            label: "TAL AI API key",
+            hint: "Internal TAL AI service key (format: uid:token)",
+            optionKey: "talAiApiKey",
+            flagName: "--tal-ai-api-key",
+            envVar: "TAL_AI_API_KEY",
+            promptMessage: "Enter your TAL AI API key",
+            defaultModel: "mlops-claude/claude-sonnet-4.6",
+            expectedProviders: ["mlops-claude", "tal-mlops"],
+            wizard: {
+                choiceId: "mlops-claude-api-key",
+                choiceLabel: "TAL MLOps Claude (Anthropic模型专属，模型广场 APPID:APPKEY)",
+                groupId: "tal-ai",
+                groupLabel: "TAL AI",
+            },
+        }),
+    ],
+    staticCatalog: {
+        order: "simple",
+        run: async (_ctx) => ({
+            providers: {
+                "mlops-claude": {
+                    baseUrl: "https://ai-service.tal.com",
+                    api: "anthropic-messages",
+                    models: MLOPS_CLAUDE_MODELS,
+                },
+            },
+        }),
+    },
+    catalog: {
+        order: "simple",
+        run: async (ctx) => {
+            const { apiKey } = ctx.resolveProviderApiKey("mlops-claude");
+            if (!apiKey)
+                return null;
+            return {
+                providers: {
+                    "mlops-claude": {
+                        baseUrl: "https://ai-service.tal.com",
+                        apiKey,
+                        api: "anthropic-messages",
+                        models: MLOPS_CLAUDE_MODELS,
+                    },
+                },
+            };
+        },
+    },
+};
+//# sourceMappingURL=mlops-claude.js.map
