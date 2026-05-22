@@ -2,8 +2,9 @@
   "id": "tal-ai",
   "name": "TAL AI",
   "description": "TAL internal AI service: mlops-claude (Anthropic), tal-mlops (OpenAI-compat), claw (unified proxy)",
-  "version": "2026.5.19",
+  "version": "2026.5.20",
   "type": "provider",
+  "providerDiscoveryEntry": "./provider-discovery.js",
   "setup": {
     "providers": [
       { "id": "mlops-claude", "envVars": ["TAL_AI_API_KEY"], "authMethods": ["api-key"] },
@@ -107,6 +108,11 @@
           { "id": "doubao-seed-2.0-lite", "name": "doubao-seed-2.0-lite", "reasoning": true, "input": ["text", "image"], "contextWindow": 256000,  "maxTokens": 128000, "compat": { "supportsStore": false, "supportsDeveloperRole": false, "supportsReasoningEffort": true, "supportsUsageInStreaming": true, "maxTokensField": "max_tokens", "requiresAssistantAfterToolResult": false }, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } }
         ]
       }
+    },
+    "discovery": {
+      "mlops-claude": "static",
+      "tal-mlops": "static",
+      "claw": "static"
     }
   },
   "modelSupport": {
