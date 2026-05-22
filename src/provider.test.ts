@@ -24,8 +24,8 @@ describe("mlops-claude", () => {
     expect(await mlopsClaudeProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("staticRun returns models without auth", async () => {
-    const result = await mlopsClaudeProvider.catalog.staticRun({} as any);
+  it("staticCatalog returns models without auth", async () => {
+    const result = await mlopsClaudeProvider.staticCatalog.run({} as any);
     expect(result?.providers?.["mlops-claude"]?.api).toBe("anthropic-messages");
     expect(result?.providers?.["mlops-claude"]?.baseUrl).toBe("https://ai-service.tal.com");
     const ids = result?.providers?.["mlops-claude"]?.models?.map((m: any) => m.id);
@@ -52,8 +52,8 @@ describe("tal-mlops", () => {
     expect(await talMlopsProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("staticRun returns models without auth", async () => {
-    const result = await talMlopsProvider.catalog.staticRun({} as any);
+  it("staticCatalog returns models without auth", async () => {
+    const result = await talMlopsProvider.staticCatalog.run({} as any);
     expect(result?.providers?.["tal-mlops"]?.api).toBe("openai-completions");
     expect(result?.providers?.["tal-mlops"]?.baseUrl).toBe("https://ai-service.tal.com/openai-compatible/v1");
     const ids = result?.providers?.["tal-mlops"]?.models?.map((m: any) => m.id);
@@ -113,8 +113,8 @@ describe("claw", () => {
     expect(await clawProvider.catalog.run(withoutKey)).toBeNull();
   });
 
-  it("staticRun returns models without auth", async () => {
-    const result = await clawProvider.catalog.staticRun({} as any);
+  it("staticCatalog returns models without auth", async () => {
+    const result = await clawProvider.staticCatalog.run({} as any);
     expect(result?.providers?.["claw"]?.api).toBe("openai-completions");
     expect(result?.providers?.["claw"]?.baseUrl).toBe("https://ai-service.tal.com/claw/v1");
     expect(result?.providers?.["claw"]?.headers?.["X-Agent-Channel"]).toBe("jcfwzt-sre-openclaw");

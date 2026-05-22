@@ -166,9 +166,9 @@ export const talMlopsProvider = {
 
   auth: [talMlopsBaseAuth],
 
-  catalog: {
+  staticCatalog: {
     order: "simple",
-    staticRun: async (_ctx) => ({
+    run: async (_ctx) => ({
       providers: {
         "tal-mlops": {
           baseUrl: "https://ai-service.tal.com/openai-compatible/v1",
@@ -177,6 +177,10 @@ export const talMlopsProvider = {
         },
       },
     }),
+  },
+
+  catalog: {
+    order: "simple",
     run: async (ctx) => {
       const { apiKey } = ctx.resolveProviderApiKey("tal-mlops");
       if (!apiKey) return null;

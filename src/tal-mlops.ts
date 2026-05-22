@@ -170,9 +170,9 @@ export const talMlopsProvider = {
     }),
   ],
 
-  catalog: {
+  staticCatalog: {
     order: "simple" as const,
-    staticRun: async (_ctx: any) => ({
+    run: async (_ctx: any) => ({
       providers: {
         "tal-mlops": {
           baseUrl: "https://ai-service.tal.com/openai-compatible/v1",
@@ -180,7 +180,11 @@ export const talMlopsProvider = {
           models: TAL_MLOPS_MODELS,
         },
       },
-    }),
+    } as any),
+  },
+
+  catalog: {
+    order: "simple" as const,
     run: async (ctx: any) => {
       const { apiKey } = ctx.resolveProviderApiKey("tal-mlops");
       if (!apiKey) return null;

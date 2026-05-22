@@ -47,9 +47,9 @@ export const clawProvider = {
 
   auth: [clawBaseAuth],
 
-  catalog: {
+  staticCatalog: {
     order: "simple",
-    staticRun: async (_ctx) => ({
+    run: async (_ctx) => ({
       providers: {
         "claw": {
           baseUrl: "https://ai-service.tal.com/claw/v1",
@@ -59,6 +59,10 @@ export const clawProvider = {
         },
       },
     }),
+  },
+
+  catalog: {
+    order: "simple",
     run: async (ctx) => {
       const { apiKey } = ctx.resolveProviderApiKey("claw");
       if (!apiKey) return null;

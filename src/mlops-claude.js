@@ -93,9 +93,9 @@ export const mlopsClaudeProvider = {
 
   auth: [mlopsClaudeBaseAuth],
 
-  catalog: {
+  staticCatalog: {
     order: "simple",
-    staticRun: async (_ctx) => ({
+    run: async (_ctx) => ({
       providers: {
         "mlops-claude": {
           baseUrl: "https://ai-service.tal.com",
@@ -104,6 +104,10 @@ export const mlopsClaudeProvider = {
         },
       },
     }),
+  },
+
+  catalog: {
+    order: "simple",
     run: async (ctx) => {
       const { apiKey } = ctx.resolveProviderApiKey("mlops-claude");
       if (!apiKey) return null;
