@@ -391,3 +391,149 @@ npm run build
 3. **优先使用共享辅助函数**：`supportsNativeStreamingUsageCompat` 和 `applyProviderNativeStreamingUsageCompat` 可自动检测端点能力，无需硬编码提供商 ID 检查。
 4. **错误处理统一用 `assertOkOrThrowProviderError`**：确保有上限的错误正文读取、JSON 错误解析和请求 ID 后缀。
 5. **发布前必须填写 compat/build 字段**：ClawHub 发布校验依赖这些字段。
+
+---
+
+## 13. 踩坑记录（本项目实战）
+
+> 以下问题均通过阅读 `/opt/homebrew/lib/node_modules/openclaw/dist/` 源码确认根因。
+
+### 坑1：HTTP → HTTPS（端点 URL）
+
+**现象**：请求报错，连接被拒绝。  
+**原因**：所有 TAL AI 端点必须使用 HTTPS，不能使用 HTTP。  
+**修复**：将 `baseUrl` 中的 `http://` 全部改为 `https://`。
+
+---
+
+### 坑2：`openclaw.plugin.json` 缺少顶级 `"providers"` 数组（**最关键**）
+
+**现象**：`openclaw config` 向导能正常显示 TAL AI 的 auth 选项（因为 `providerAuthChoices` 是独立查找路径），但 `/model picker` 多选步骤完全不出现，或只显示 `amazon-bedrock/*` 模型。
+
+**根因**（源码：`providers-ChCs1dXB.js`）：
+```javascript
+function resolveProviderSurfacePluginIdSet(params) {
+  return new Set(registry.plugins.flatMap(
+    (plugin) => plugin.providers.length > 0 ? [plugin.id] : []
+  ));
+}
+```
+`plugin.providers` 来自 manifest 顶级的 `"providers"` 字段。缺失时值为 `[]`，该插件被完全排除在 provider surface 之外，model picker、catalog hooks、owner resolution 全部失效。
+
+`setup.providers[].id` **不等于**顶级 `providers`，两者是不同字段，都必须填写。
+
+**修复**：在 `openclaw.plugin.json` 顶级加入：
+```json
+"providers": ["mlops-claude", "tal-mlops", "claw"]
+```
+
+---
+
+### 坑3：`openclaw.plugin.json` 缺少 `"enabledByDefault"` 和 `"activation"`
+
+**现象**：插件安装后行为不稳定，在某些环境下发现系统跳过该插件。  
+**根因**：外部插件若不设 `"enabledByDefault": true`，`isActivatedManifestOwner` 返回 false，插件不满足发现资格。`"activation"` 是所有内置 provider 的标准字段。  
+**修复**：
+```json
+"activation": { "onStartup": false },
+"enabledByDefault": true
+```
+
+---
+
+### 坑4：缺少 `providerDiscoveryEntry` 和 `provider-discovery.js`
+
+**现象**：`/model picker` 卡在"正在加载可用模型"或显示 amazon-bedrock 模型。  
+**根因**（源码：`provider-discovery.runtime-_FlNT3d8.js`）：  
+无 `providerDiscoveryEntry` 时，插件没有 `providerDiscoverySource`，不进入快速发现路径。回退的 `resolvePluginProviders(bundledProviderAllowlistCompat:true)` 只加载内置插件，外部插件被 allowlist 拦截，返回空列表。
+
+**修复**：
+1. 在 `openclaw.plugin.json` 顶级添加 `"providerDiscoveryEntry": "./provider-discovery.js"`
+2. 创建 `provider-discovery.js`，导出包含 `catalog` + `staticCatalog` 的 provider 对象数组
+
+参考 moonshot 模式，但**必须同时有 `catalog.run` 和 `staticCatalog`**（见坑5）。
+
+---
+
+### 坑5：`provider-discovery.js` 只有 `staticCatalog` 不够，必须同时有 `catalog.run`
+
+**现象**：加了 `providerDiscoveryEntry` 后模型选择器仍不显示。  
+**根因**（源码：`provider-discovery.runtime-_FlNT3d8.js`）：
+```javascript
+function hasLiveProviderDiscoveryHook(provider) {
+  return typeof provider.catalog?.run === "function"
+      || typeof provider.discovery?.run === "function";
+}
+```
+只有 `staticCatalog` 时 `hasLiveProviderDiscoveryHook` 返回 false，provider 不进入 `liveEntryProviders`。对外部插件而言，回退路径 `resolvePluginProviders(bundledProviderAllowlistCompat:true)` 同样被 allowlist 拦截，最终返回空。
+
+**修复**：`provider-discovery.js` 中每个 provider 必须同时声明：
+- `catalog.run(ctx)`：调用 `ctx.resolveProviderApiKey(id)`，有 key 返回配置，无 key 返回 null
+- `staticCatalog.run()`：无参数，返回静态模型列表（用于未认证时展示）
+
+```javascript
+const myDiscovery = {
+  id: "my-provider",
+  label: "My Provider",
+  auth: [],
+  catalog: {
+    order: "simple",
+    run: async (ctx) => {
+      const { apiKey } = ctx.resolveProviderApiKey("my-provider");
+      if (!apiKey) return null;
+      return { provider: { baseUrl: "...", api: "openai-completions", apiKey, models: MODELS } };
+    },
+  },
+  staticCatalog: {
+    order: "simple",
+    run: async () => ({
+      provider: { baseUrl: "...", api: "openai-completions", models: MODELS },
+    }),
+  },
+};
+export default [myDiscovery];  // 多个 provider 导出数组
+```
+
+注意：`catalog.run` / `staticCatalog.run` 返回 `{ provider: {...} }`（单数）而非 `{ providers: {...} }`（复数）。
+
+---
+
+### 坑6：多个 Provider 共享同一 API Key 时反复提示输入
+
+**现象**：`mlops-claude` 配置完 key 后，配置 `tal-mlops` 时再次弹出输入框。  
+**根因**：`createProviderApiKeyAuthMethod` 中 `expectedProviders` 默认是 `[providerId]`（只找自己的 profile）。两个 provider 各自的 profile 互相不知道，找不到对方已存的凭证就重新提示。  
+**修复**：在两个 provider 的 auth method 里都设置：
+```javascript
+expectedProviders: ["mlops-claude", "tal-mlops"]
+```
+任意一个配置后，另一个会复用已存凭证，不再重复提示。
+
+---
+
+### 坑7：`clawhub package publish` 必须传绝对路径
+
+**现象**：`clawhub package publish . --family code-plugin ...` 报错 `package.json required`。  
+**修复**：传绝对路径：
+```bash
+clawhub package publish /absolute/path/to/plugin \
+  --family code-plugin \
+  --version 2026.5.x \
+  --source-repo owner/repo \
+  --source-commit $(git rev-parse HEAD)
+```
+
+---
+
+### 完整 `openclaw.plugin.json` 顶级必填字段速查
+
+外部 provider 插件的 manifest 必须包含以下顶级字段，缺一不可：
+
+| 字段 | 作用 |
+|------|------|
+| `"providers": [...]` | 注册 provider surface，进入发现系统的门槛 |
+| `"enabledByDefault": true` | 安装后自动激活，无需手动 enable |
+| `"activation": {"onStartup": false}` | 标准 provider 激活模式 |
+| `"providerDiscoveryEntry": "./provider-discovery.js"` | 快速发现路径入口，model picker 依赖此项 |
+| `"providerAuthChoices": [...]` | config 向导的 auth 选项列表 |
+| `"setup": {"providers": [...]}` | envVars 和 authMethods 声明（与顶级 providers 不同） |
+| `"configSchema": {}` | 必须存在，否则安装失败 |
