@@ -150,6 +150,7 @@ const talMlopsBaseAuth = createProviderApiKeyAuthMethod({
   envVar: "TAL_AI_API_KEY",
   promptMessage: "输入 TAL 模型广场凭证（格式：APPID:APPKEY）",
   defaultModel: "tal-mlops/glm-5.1",
+  expectedProviders: ["mlops-claude", "tal-mlops"],
   wizard: {
     choiceId: "tal-mlops-api-key",
     choiceLabel: "TAL MLOps (模型广场 APPID:APPKEY)",

@@ -161,6 +161,7 @@ export const talMlopsProvider = {
       envVar: "TAL_AI_API_KEY",
       promptMessage: "Enter your TAL AI API key",
       defaultModel: "tal-mlops/glm-5.1",
+      expectedProviders: ["mlops-claude", "tal-mlops"],
       wizard: {
         choiceId: "tal-mlops-api-key",
         choiceLabel: "TAL MLOps (模型广场 APPID:APPKEY)",

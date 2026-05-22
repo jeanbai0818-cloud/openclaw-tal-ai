@@ -77,6 +77,7 @@ const mlopsClaudeBaseAuth = createProviderApiKeyAuthMethod({
   envVar: "TAL_AI_API_KEY",
   promptMessage: "输入 TAL 模型广场凭证（格式：APPID:APPKEY）",
   defaultModel: "mlops-claude/claude-sonnet-4.6",
+  expectedProviders: ["mlops-claude", "tal-mlops"],
   wizard: {
     choiceId: "mlops-claude-api-key",
     choiceLabel: "TAL MLOps Claude (Anthropic模型专属，模型广场 APPID:APPKEY)",
