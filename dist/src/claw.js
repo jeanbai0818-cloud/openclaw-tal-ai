@@ -138,6 +138,23 @@ const CLAW_MODELS = [
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
     },
     {
+        id: "kimi-k2.6",
+        name: "kimi-k2.6",
+        reasoning: true,
+        input: ["text", "image"],
+        contextWindow: 256000,
+        maxTokens: 32768,
+        compat: {
+            supportsStore: false,
+            supportsDeveloperRole: false,
+            supportsReasoningEffort: true,
+            supportsUsageInStreaming: true,
+            maxTokensField: "max_tokens",
+            requiresAssistantAfterToolResult: false,
+        },
+        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    },
+    {
         id: "gemini-3-flash",
         name: "Gemini 3 Flash",
         reasoning: true,
