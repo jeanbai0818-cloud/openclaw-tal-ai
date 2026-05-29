@@ -524,6 +524,54 @@ clawhub package publish /absolute/path/to/plugin \
 
 ---
 
+### 坑8：`catalog.run()` 写入 `models.json`，但 provider headers 只从 `openclaw.json` 读取
+
+**现象**：插件配置了 `headers: { "X-Agent-Channel": "..." }`，curl 手动测试完全正常，但 openclaw agent 发出的请求缺少该 header，服务端返回 403。
+
+**根因**（源码：`model-CybbPGvR.js` + `models-config-CAklyV4-.js`）：
+
+`catalog.run()` 的结果（含 provider-level `headers`）写入的是 `~/.openclaw/agents/main/agent/models.json`（运行时缓存）。
+
+但请求时，`providerConfig`（包含 `headers`）是通过 `resolveConfiguredProviderConfig(cfg, provider)` 从 **`openclaw.json` 的 `models.providers.<id>`** 读取的：
+
+```js
+const providerHeaders = sanitizeModelHeaders(providerConfig.headers, { stripSecretRefMarkers: true });
+```
+
+如果 `openclaw.json` 里没有该 provider 的条目，`providerConfig` 为 undefined，`providerHeaders` 为 undefined，headers 完全丢失。
+
+`models.json` 里 provider-level 的 `headers` 字段在 `normalizePersistedModelCatalogEntry` 中被忽略，永远不会传递到 transport 层。
+
+**修复**：在 provider 上注册 `prepareRuntimeAuth` hook，通过 `request.headers` 在每次请求前注入 header：
+
+```js
+prepareRuntimeAuth: async (ctx) => ({
+  apiKey: ctx.apiKey,
+  request: {
+    headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
+  },
+}),
+```
+
+`prepareRuntimeAuth` 的 `request` 字段由 `applyPreparedRuntimeRequestOverrides` 处理（源码：`pi-embedded-CJ87lW5R.js`），最终通过 `resolveProviderRequestConfig` 合并进 transport headers。此路径不依赖 `openclaw.json`，每次请求均有效。
+
+**教训**：需要随每次请求发送的 custom header，必须用 `prepareRuntimeAuth`，不能只依赖 `catalog.run()` 的 `headers` 字段。
+
+---
+
+### 坑9：`openclaw plugins uninstall` 必须用 manifest id，不能用 clawhub 包名
+
+**现象**：`openclaw plugins uninstall clawhub:@jeanbai0818-cloud/openclaw-tal-ai` 报错 `Plugin not found`。
+
+**根因**：安装时日志提示 `Plugin manifest id "tal-ai" differs from npm package name`，config key 用的是 manifest id `tal-ai`，不是 npm 包名。
+
+**修复**：用 manifest id 卸载：
+```bash
+openclaw plugins uninstall tal-ai --force
+```
+
+---
+
 ### 完整 `openclaw.plugin.json` 顶级必填字段速查
 
 外部 provider 插件的 manifest 必须包含以下顶级字段，缺一不可：
