@@ -2,7 +2,7 @@
   "id": "tal-ai",
   "name": "TAL AI",
   "description": "TAL internal AI service: mlops-claude (Anthropic), tal-mlops (OpenAI-compat), claw (unified proxy)",
-  "version": "2026.5.29",
+  "version": "2026.5.29-1",
   "type": "provider",
   "activation": { "onStartup": false },
   "enabledByDefault": true,
@@ -89,8 +89,8 @@
         ]
       },
       "claw": {
-        "baseUrl": "https://ai-service.tal.com/claw",
-        "api": "openai-completions",
+        "baseUrl": "https://ai-service.tal.com/claw/v1",
+        "api": "anthropic-messages",
         "headers": { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
         "models": [
           { "id": "claude-haiku-4.5",  "name": "Claude Haiku 4.5",  "api": "anthropic-messages", "reasoning": true,  "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 64000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },

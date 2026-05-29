@@ -1,6 +1,6 @@
 import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth";
 // claw: TAL unified proxy endpoint
-// baseUrl: https://ai-service.tal.com/claw, api: openai-completions (provider default)
+// baseUrl: https://ai-service.tal.com/claw/v1, api: openai-completions (provider default)
 // Per-model api overrides: Claude/GLM models use "anthropic-messages", others use "openai-completions"
 // Custom header X-Agent-Channel required for all requests; authHeader:true sends key as Authorization Bearer
 const CLAW_MODELS = [
@@ -245,8 +245,8 @@ export const clawProvider = {
         run: async (_ctx) => ({
             providers: {
                 "claw": {
-                    baseUrl: "https://ai-service.tal.com/claw",
-                    api: "openai-completions",
+                    baseUrl: "https://ai-service.tal.com/claw/v1",
+                    api: "anthropic-messages",
                     headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
                     models: CLAW_MODELS,
                 },
@@ -262,9 +262,9 @@ export const clawProvider = {
             return {
                 providers: {
                     "claw": {
-                        baseUrl: "https://ai-service.tal.com/claw",
+                        baseUrl: "https://ai-service.tal.com/claw/v1",
                         apiKey,
-                        api: "openai-completions",
+                        api: "anthropic-messages",
                         headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
                         models: CLAW_MODELS,
                     },

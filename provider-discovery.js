@@ -117,8 +117,8 @@ const clawDiscovery = {
       if (!apiKey) return null;
       return {
         provider: {
-          baseUrl: "https://ai-service.tal.com/claw",
-          api: "openai-completions",
+          baseUrl: "https://ai-service.tal.com/claw/v1",
+          api: "anthropic-messages",
           headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
           apiKey,
           models: CLAW_MODELS,
@@ -130,8 +130,8 @@ const clawDiscovery = {
     order: "simple",
     run: async () => ({
       provider: {
-        baseUrl: "https://ai-service.tal.com/claw",
-        api: "openai-completions",
+        baseUrl: "https://ai-service.tal.com/claw/v1",
+        api: "anthropic-messages",
         headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
         models: CLAW_MODELS,
       },

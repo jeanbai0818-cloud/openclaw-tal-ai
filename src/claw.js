@@ -52,8 +52,8 @@ export const clawProvider = {
     run: async (_ctx) => ({
       providers: {
         "claw": {
-          baseUrl: "https://ai-service.tal.com/claw",
-          api: "openai-completions",
+          baseUrl: "https://ai-service.tal.com/claw/v1",
+          api: "anthropic-messages",
           headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
           models: CLAW_MODELS,
         },
@@ -69,9 +69,9 @@ export const clawProvider = {
       return {
         providers: {
           "claw": {
-            baseUrl: "https://ai-service.tal.com/claw",
+            baseUrl: "https://ai-service.tal.com/claw/v1",
             apiKey,
-            api: "openai-completions",
+            api: "anthropic-messages",
             headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
             models: CLAW_MODELS,
           },
