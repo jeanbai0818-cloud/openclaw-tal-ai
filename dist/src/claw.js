@@ -240,6 +240,16 @@ export const clawProvider = {
             },
         }),
     ],
+    // X-Agent-Channel must be injected at runtime because models.json provider-level
+    // headers are not propagated to the transport layer — only openclaw.json
+    // models.providers.<id>.headers are read by resolveConfiguredProviderConfig.
+    // prepareRuntimeAuth.request.headers is the correct hook to inject them.
+    prepareRuntimeAuth: async (ctx) => ({
+        apiKey: ctx.apiKey,
+        request: {
+            headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
+        },
+    }),
     staticCatalog: {
         order: "simple",
         run: async (_ctx) => ({

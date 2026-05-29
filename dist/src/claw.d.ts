@@ -4,6 +4,14 @@ export declare const clawProvider: {
     docsPath: string;
     envVars: string[];
     auth: import("openclaw/plugin-sdk/plugin-entry").ProviderAuthMethod[];
+    prepareRuntimeAuth: (ctx: any) => Promise<{
+        apiKey: any;
+        request: {
+            headers: {
+                "X-Agent-Channel": string;
+            };
+        };
+    }>;
     staticCatalog: {
         order: "simple";
         run: (_ctx: any) => Promise<any>;

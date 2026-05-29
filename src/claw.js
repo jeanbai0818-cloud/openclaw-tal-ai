@@ -47,6 +47,13 @@ export const clawProvider = {
 
   auth: [clawBaseAuth],
 
+  prepareRuntimeAuth: async (ctx) => ({
+    apiKey: ctx.apiKey,
+    request: {
+      headers: { "X-Agent-Channel": "jcfwzt-sre-openclaw" },
+    },
+  }),
+
   staticCatalog: {
     order: "simple",
     run: async (_ctx) => ({
